@@ -7,7 +7,7 @@ An example for using Vue and D3 to create a reactive line chart. The line chart 
 - Zoom and pan
 - Swith between linear and log scale (Y axis)
 - Responsive to the resizing of its parent element (TODO)
-- Save to PNG file with confiurable resolution
+- Save to SVG or PNG file with confiurable scale rate
 - Select lines using a rubberband box (TODO)
 
 ## Build Setup

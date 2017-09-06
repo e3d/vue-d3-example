@@ -1,18 +1,20 @@
 <template>
   <form>
-    <fieldset class="form-group">
+    <div class="form-group">
       <label for="chartTitle">Chart Title</label>
       <input type="text" class="form-control" id="chartTitle" v-model="title">
-    </fieldset>
-    <fieldset class="form-group">
-      <label for="axisTitleX">X Axis Title</label>
-      <input type="text" class="form-control" id="axisTitleX" v-model="axisTitleX">
-    </fieldset>
-    <fieldset class="form-group">
-      <label for="axisTitleY">Y Axis Title</label>
-      <input type="text" class="form-control" id="axisTitleY" v-model="axisTitleY">
-    </fieldset>
-    <fieldset class="form-group">
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="axisTitleX">X Axis Title</label>
+        <input type="text" class="form-control" id="axisTitleX" v-model="axisTitleX">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="axisTitleY">Y Axis Title</label>
+        <input type="text" class="form-control" id="axisTitleY" v-model="axisTitleY">
+      </div>
+    </div>
+    <div class="form-group">
       <legend class="col-form-legend">Y Axis Scale</legend>
       <label class="form-check-label" style="padding-right:10px;">
         <input class="form-check-input" type="radio" v-model="yScale" value="Linear"> Linear
@@ -20,15 +22,28 @@
       <label class="form-check-label">
         <input class="form-check-input" type="radio" v-model="yScale" value="Log"> Logarithm
       </label>
-      </div>
-    </fieldset>
+    </div>
+    </div>
     <hr>
     <button class="btn btn-default" @click.prevent="$emit('resetZoom')">
       Reset Zoom
     </button>
-    <button class="btn btn-default" @click.prevent="$emit('saveImage')">
-      Save Image
-    </button>
+    <hr>
+    <div class="form-inline">
+      <select class="form-control mb-2 mr-sm-2 mb-sm-0" v-model="imageFormat">
+        <option value="svg">SVG</option>
+        <option value="png">PNG</option>
+      </select>
+      <select v-if="imageFormat ==='png'" class="form-control mb-2 mr-sm-2 mb-sm-0" v-model="imageScale">
+        <option value="1">1x</option>
+        <option value="2">2x</option>
+        <option value="3">3x</option>
+        <option value="4">4x</option>
+      </select>
+      <button class="btn btn-default" @click.prevent="$emit('saveImage', imageFormat, imageScale)">
+        Save As Image
+      </button>
+    </div>
   </form>
 </template>
 
@@ -45,7 +60,9 @@ export default {
       title: this.initConfig.title,
       axisTitleX: this.initConfig.axisX.title,
       axisTitleY: this.initConfig.axisY.title,
-      yScale: this.initConfig.axisY.scale
+      yScale: this.initConfig.axisY.scale,
+      imageFormat: 'png',
+      imageScale: 2
     }
   },
   watch: {

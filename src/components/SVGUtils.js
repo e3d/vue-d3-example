@@ -70,33 +70,57 @@ function getSVGString(svgNode) {
   }
 }
 
-function svgToImage(svgNode, width, height, format, callback) {
-  var svgString = getSVGString(svgNode);
+const downloadBlob = (function () {
+  var a = document.createElement("a");
+  a.style = "display: none";
+  document.body.appendChild(a);
+  return function (data, fileName) {
+    var blob = new Blob([data], { type: "image/svg+xml" }),
+      url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+}());
 
-  var format = format ? format : 'png';
+function fixFileExtension(fileName, ext) {
+  return fileName.toLowerCase().endsWith(ext) ? fileName : fileName + '.' + ext;
+}
 
-  var imgsrc = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgString))); // Convert SVG string to data URL
+function downloadSVG(svgNode, fileName) {
+  fileName = fixFileExtension(fileName, 'svg');
+  const svgString = getSVGString(svgNode);
+  const blob = new Blob([svgString], { type: "image/svg+xml" });
+  downloadBlob(blob, fileName);
+}
 
+function downloadPNG(svgNode, fileName, width, height, scale = 1) {
+  fileName = fixFileExtension(fileName, 'png');
+  const svgString = getSVGString(svgNode);
+  
+  // Convert SVG string to data URL
+  var imgsrc = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgString)));
   var canvas = document.createElement("canvas");
   var context = canvas.getContext("2d");
-
-  canvas.width = width;
-  canvas.height = height;
+  // Scale the canvas first
+  canvas.width = width * scale;
+  canvas.height = height * scale;
 
   var image = new Image();
   image.onload = function () {
-    context.clearRect(0, 0, width, height);
-    context.drawImage(image, 0, 0, width, height);
-
+    // draw the image to canvas with destination scale
+    context.drawImage(image, 0, 0, width, height, 0, 0, width * scale, height * scale);
     canvas.toBlob(function (blob) {
       var filesize = Math.round(blob.length / 1024) + ' KB';
-      if (callback) callback(blob, filesize);
+      downloadBlob(blob, fileName);
     });
-
-
   };
 
   image.src = imgsrc;
 }
 
-export default svgToImage;
+export default {
+  downloadSVG,
+  downloadPNG
+}

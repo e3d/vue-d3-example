@@ -64,8 +64,13 @@ export default {
     onResetZoom() {
       this.$refs.lineChart.resetDomain();
     },
-    onSaveImage() {
-      this.$refs.lineChart.saveToImage(1, (dataBlob, fileSize) => saveAs(dataBlob, "Line Chart.png"));
+    onSaveImage(imageFormat, imageScale) {
+      const fileName = 'Line Chart';
+      if (imageFormat === 'svg') {
+        this.$refs.lineChart.downloadSVG(fileName);
+      } else {
+        this.$refs.lineChart.downloadPNG(fileName, imageScale);
+      }
     }
   },
   components: {

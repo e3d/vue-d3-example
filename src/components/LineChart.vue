@@ -30,7 +30,7 @@ import * as d3 from 'd3';
 import DataLine from './DataLine.vue';
 import ChartAxis from './ChartAxis.vue';
 import GlassPane from './GlassPane.vue';
-import svgToImage from '../vendor/svgToImage';
+import SVGUtils from './SVGUtils';
 
 export default {
   props: {
@@ -173,9 +173,11 @@ export default {
       this.prefDomainX = [x1, x2];
       this.prefDomainY = [y1, y2];
     },
-    saveToImage(factor, callback) {
-      factor = factor || 1;
-      svgToImage(this.$refs.svgRoot, this.width * factor, this.height * factor, 'png', callback);
+    downloadSVG(fileName) {
+      SVGUtils.downloadSVG(this.$refs.svgRoot, fileName);
+    },
+    downloadPNG(fileName, scale) {
+      SVGUtils.downloadPNG(this.$refs.svgRoot, fileName, this.width, this.height, scale);
     },
     onSelect(p1, p2) { // handler for selection pane
     },
