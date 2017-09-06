@@ -1,9 +1,9 @@
 # vue-d3-example
 
-> An example for using Vue and D3 to create a reactive line chart. The line chart in the example supports the following features
+An example for using Vue and D3 to create a reactive line chart. The line chart in the example supports the following features
 
 - Display multiple line series in different color
-- Display chart title and axis title (TODO)
+- Display chart title and axis title
 - Zoom and pan
 - Swith between linear and log scale (Y axis)
 - Responsive to the resizing of its parent element (TODO)

@@ -2,7 +2,7 @@
   <form>
     <fieldset class="form-group">
       <label for="chartTitle">Chart Title</label>
-      <input type="text" class="form-control" id="chartTitle" v-model="chartTitle">
+      <input type="text" class="form-control" id="chartTitle" v-model="title">
     </fieldset>
     <fieldset class="form-group">
       <label for="axisTitleX">X Axis Title</label>
@@ -23,10 +23,10 @@
       </div>
     </fieldset>
     <hr>
-    <button class="btn btn-default" @click="$emit('resetZoom')">
+    <button class="btn btn-default" @click.prevent="$emit('resetZoom')">
       Reset Zoom
     </button>
-    <button class="btn btn-default" @click="$emit('saveImage')">
+    <button class="btn btn-default" @click.prevent="$emit('saveImage')">
       Save Image
     </button>
   </form>
@@ -42,15 +42,24 @@ export default {
   },
   data() {
     return {
-      chartTitle: this.initConfig.chartTitle,
-      axisTitleX: this.initConfig.axisTitleX,
-      axisTitleY: this.initConfig.axisTitleY,
-      yScale: 'Linear'
+      title: this.initConfig.title,
+      axisTitleX: this.initConfig.axisX.title,
+      axisTitleY: this.initConfig.axisY.title,
+      yScale: this.initConfig.axisY.scale
     }
   },
   watch: {
     yScale() {
       this.$emit('changeScale', this.yScale);
+    },
+    title() {
+      this.$emit('changeTitle', this.title);
+    },
+    axisTitleX() {
+      this.$emit('changeAxisTitleX', this.axisTitleX);
+    },
+    axisTitleY() {
+      this.$emit('changeAxisTitleY', this.axisTitleY);
     }
   }
 }

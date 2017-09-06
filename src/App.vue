@@ -4,10 +4,16 @@
     <p class="lead">Use mouse wheel to zoom and drag for pan.</p>
     <div class="row">
       <div class="col-8">
-        <line-chart ref="lineChart" :lines="lines" :scaleY="chartConfig.scaleY" />
+        <line-chart ref="lineChart" :title="config.title" :axisX="config.axisX" :axisY="config.axisY" :lines="lines" :scaleY="config.scaleY" />
       </div>
       <div class="col-4">
-        <control-panel :initConfig="chartConfig" @changeScale="onChangeScale" @resetZoom="onResetZoom" @saveImage="onSaveImage" />
+        <control-panel :initConfig="config" 
+          @changeTitle="title => config.title = title"
+          @changeAxisTitleX="title => config.axisX.title = title"
+          @changeAxisTitleY="title => config.axisY.title = title"
+          @changeScale="onChangeScale" 
+          @resetZoom="onResetZoom" 
+          @saveImage="onSaveImage" />
       </div>
     </div>
   </div>
@@ -21,11 +27,16 @@ import AutoSize from './directives/AutoSize';
 export default {
   data: function() {
     return {
-      chartConfig: {
-        chartTitle: 'Exmaple Chart',
-        axisTitleX: 'Axis X',
-        axisTitleY: 'Axis Y',
-        scaleY: 'Linear'
+      config: {
+        title: 'Example Chart',
+        axisX: {
+          title: 'Axis X',
+          scale: 'Linear'
+        },
+        axisY: {
+          title: 'Axis Y',
+          scale: 'Linear'
+        }
       },
       lines: [
         {
@@ -48,7 +59,7 @@ export default {
   },
   methods: {
     onChangeScale(newScale) {
-      this.chartConfig.scaleY = newScale;
+      this.config.axisY.scale = newScale;
     },
     onResetZoom() {
       this.$refs.lineChart.resetDomain();

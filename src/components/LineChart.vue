@@ -1,14 +1,17 @@
 <template>
   <div class="chart" :style="_containerStyle">
     <svg style="width:100%;height:100%;" ref="svgRoot">
+      <g v-if="_hasTitle" :transform="_titleTransform">
+        <text class="chart-title">{{title}}</text>
+      </g>
       <g :transform="_chartTransform">
-        <g class="axis">
-          <chart-axis orient="Left" :scale="_scaleY" />
+        <g class="chart-axis">
+          <chart-axis :title="axisY.title" orient="Left" :scale="_scaleY" />
           <g :transform="_axisTransform">
-            <chart-axis orient="Bottom" :scale="_scaleX" />
+            <chart-axis :title="axisX.title" orient="Bottom" :scale="_scaleX" />
           </g>
         </g>
-        <g class="lines" clip-path="url(#line-clip)">
+        <g class="chart-lines" clip-path="url(#line-clip)">
           <data-line v-for="line in lines" :key="line.id" :data="line" :scaleX="_scaleX" :scaleY="_scaleY" />
         </g>
       </g>
@@ -31,35 +34,41 @@ import svgToImage from '../vendor/svgToImage';
 
 export default {
   props: {
-    'width': {
+    title: {
+      type: String,
+      required: false
+    },
+    axisX: { // { title: 'X', scale: 'Linear|Log' }
+      type: Object,
+      default() {
+        return {
+          scale: 'Linear'
+        }
+      }
+    },
+    axisY: { // { title: 'Y', scale: 'Linear|Log' }
+      type: Object,
+      default() {
+        return {
+          scale: 'Linear'
+        }
+      }
+    },
+    width: {
       type: Number,
       default: 600
     },
-    'height': {
+    height: {
       type: Number,
       default: 400
     },
-    'scaleX': { // 'Linear', 'Log'
-      type: String,
-      default: 'Linear'
-    },
-    'scaleY': { // 'Linear', 'Log'
-      type: String,
-      default: 'Linear'
-    },
-    'lines': { // [{ values: [...], color: 'green' }, ...]
+    lines: { // [{ values: [...], color: 'green' }, ...]
       type: Array,
       required: true
     }
   },
   data: function() {
     return {
-      'margin': {
-        top: 30,
-        right: 30,
-        bottom: 30,
-        left: 30
-      },
       prefDomainX: null,
       prefDomainY: null
     };
@@ -74,8 +83,30 @@ export default {
     _chartTransform() {
       return `translate(${this.margin.left}, ${this.margin.top})`;
     },
+    _titleTransform() {
+      return `translate(${this.width/2}, ${this.margin.top * 3/5})`;
+    },
     _axisTransform() {
       return `translate(0, ${this.contentHeight})`;
+    },
+    _hasTitle() {
+      return this.title && this.title.length > 0;
+    },
+    _hasAxisTitleX() {
+      const { title } = this.axisX;
+      return title && title.length > 0;
+    },
+    _hasAxisTitleY() {
+      const { title } = this.axisY;
+      return title && title.length > 0;
+    },
+    margin() {
+      return {
+        top: 20 + (this._hasTitle ? 20 : 0),
+        right: 20,
+        bottom: 30 + (this._hasAxisTitleX ? 20 : 0),
+        left: 40 + (this._hasAxisTitleY ? 20 : 0)
+      }
     },
     defaultDomainX() {
       const max = d3.max(this.lines, line => line.values.length);
@@ -108,16 +139,16 @@ export default {
       return this.height - this.margin.top - this.margin.bottom;
     },
     _scaleX() {
-      const { scaleX, rangeX, domainX } = this;
-      return d3['scale' + scaleX]().range(rangeX).domain(domainX);
+      const { axisX, rangeX, domainX } = this;
+      return d3['scale' + axisX.scale]().range(rangeX).domain(domainX);
     },
     _scaleY() {
-      const { scaleY, rangeY, domainY } = this;
-      return d3['scale' + scaleY]().range(rangeY).domain(domainY);
+      const { axisY, rangeY, domainY } = this;
+      return d3['scale' + axisY.scale]().range(rangeY).domain(domainY);
     }
   },
   watch: {
-    scaleY() {
+    'axisY.scale'() {
       this.resetDomain(); // domain in linear scale may be invalid in log scale
     }
   },
@@ -172,5 +203,10 @@ export default {
   position: relative;
   border: 1px solid lightgrey;
   user-select: none;
+}
+
+.chart-title {
+  text-anchor: middle;
+  font-weight: bold;
 }
 </style>
