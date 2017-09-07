@@ -169,20 +169,28 @@ export default {
       this.prefDomainY = null;
     },
     zoom(x, y, factor) {
-      const x1 = this._scaleX.invert(x - x * factor);
-      const x2 = this._scaleX.invert(x + (this.contentWidth - x) * factor);
-      const y1 = this._scaleY.invert(y + (this.contentHeight - y) * factor);
-      const y2 = this._scaleY.invert(y - y * factor);
-      this.prefDomainX = [x1, x2];
-      this.prefDomainY = [y1, y2];
+      const { _scaleX, _scaleY, contentWidth, contentHeight } = this;
+      const { defaultDomainX: [_x1, _x2], defaultDomainY: [_y1, _y2] } = this;
+      const x1 = _scaleX.invert(x - x * factor);
+      const x2 = _scaleX.invert(x + (contentWidth - x) * factor);
+      const y1 = _scaleY.invert(y + (contentHeight - y) * factor);
+      const y2 = _scaleY.invert(y - y * factor);
+      this.prefDomainX = [Math.max(_x1, x1), Math.min(_x2, x2)];
+      this.prefDomainY = [Math.max(_y1, y1), Math.min(_y2, y2)];
     },
     pan(deltaX, deltaY) {
-      const x1 = this._scaleX.invert(this.rangeX[0] - deltaX);
-      const x2 = this._scaleX.invert(this.rangeX[1] - deltaX);
-      const y1 = this._scaleY.invert(this.rangeY[0] - deltaY);
-      const y2 = this._scaleY.invert(this.rangeY[1] - deltaY);
-      this.prefDomainX = [x1, x2];
-      this.prefDomainY = [y1, y2];
+      const { _scaleX, _scaleY, rangeX, rangeY } = this;
+      const { defaultDomainX: [_x1, _x2], defaultDomainY: [_y1, _y2] } = this;
+      let x1 = _scaleX.invert(rangeX[0] - deltaX);
+      let x2 = _scaleX.invert(rangeX[1] - deltaX);
+      let y1 = _scaleY.invert(rangeY[0] - deltaY);
+      let y2 = _scaleY.invert(rangeY[1] - deltaY);
+      if (_x1 < x1 && x2 < _x2) {
+        this.prefDomainX = [x1, x2];
+      }
+      if (_y1 < y1 && y2 < _y2) {
+        this.prefDomainY = [y1, y2];
+      }
     },
     downloadSVG(fileName) {
       SVGUtils.downloadSVG(this.$refs.svgRoot, fileName);
