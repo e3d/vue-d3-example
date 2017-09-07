@@ -14,6 +14,7 @@
         <input type="text" class="form-control" id="axisTitleY" v-model="axisTitleY">
       </div>
     </div>
+    <hr>
     <div class="form-group">
       <legend class="col-form-legend">Y Axis Scale</legend>
       <label class="form-check-label" style="padding-right:10px;">

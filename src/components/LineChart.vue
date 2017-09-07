@@ -11,12 +11,18 @@
             <chart-axis :title="axisX.title" orient="Bottom" :scale="_scaleX" />
           </g>
         </g>
-        <g class="chart-lines" clip-path="url(#line-clip)">
+        <g class="chart-contents" clip-path="url(#chart-content-clip)">
           <data-line v-for="line in lines" :key="line.id" :data="line" :scaleX="_scaleX" :scaleY="_scaleY" />
+          <ref-line v-for="line in refLines" :key="line.id" 
+            :value="line.value" 
+            :axis="line.axis" 
+            :color="line.color"
+            :scale="line.axis === 'X' ? _scaleX : _scaleY"
+            :length="line.axis === 'X' ? contentHeight : contentWidth" />
         </g>
       </g>
       <defs>
-        <clipPath id="line-clip">
+        <clipPath id="chart-content-clip">
           <rect :width="contentWidth" :height="contentHeight"></rect>
         </clipPath>
       </defs>
@@ -28,6 +34,7 @@
 <script>
 import * as d3 from 'd3';
 import DataLine from './DataLine.vue';
+import RefLine from './RefLine.vue';
 import ChartAxis from './ChartAxis.vue';
 import GlassPane from './GlassPane.vue';
 import SVGUtils from './SVGUtils';
@@ -62,9 +69,13 @@ export default {
       type: Number,
       default: 400
     },
-    lines: { // [{ values: [...], color: 'green' }, ...]
+    lines: { // [{ id: 0, values: [...], color: 'green' }, ...]
       type: Array,
       required: true
+    },
+    refLines: { // [{ id: 'ref-0', value: 10, axis: 'X|Y', color: 'blue' }, ...]
+      type: Array,
+      required: false
     }
   },
   data: function() {
@@ -192,6 +203,7 @@ export default {
   components: {
     'chart-axis': ChartAxis,
     'data-line': DataLine,
+    'ref-line': RefLine,
     'glass-pane': GlassPane
   },
   mounted() {

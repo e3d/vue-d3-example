@@ -4,7 +4,13 @@
     <p class="lead">Use mouse wheel to zoom and drag for pan.</p>
     <div class="row">
       <div class="col-8">
-        <line-chart ref="lineChart" :title="config.title" :axisX="config.axisX" :axisY="config.axisY" :lines="lines" :scaleY="config.scaleY" />
+        <line-chart ref="lineChart" 
+          :title="config.title" 
+          :axisX="config.axisX" 
+          :axisY="config.axisY" 
+          :lines="lines"
+          :refLines="refLines" 
+          :scaleY="config.scaleY" />
       </div>
       <div class="col-4">
         <control-panel :initConfig="config" 
@@ -53,6 +59,20 @@ export default {
           id: 2,
           values: [5, 41, 68, 55, 76, 32, 60, 140, 100],
           color: 'green'
+        }
+      ],
+      refLines: [
+        {
+          id: 'Ref-Y',
+          value: 100,
+          axis: "Y",
+          color: "brown"
+        },
+        {
+          id: 'Ref-X',
+          value: 5,
+          axis: "X",
+          color: "green"
         }
       ]
     }
