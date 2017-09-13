@@ -51,17 +51,17 @@
 <script>
 export default {
   props: {
-    'initConfig': {
+    'options': {
       type: Object,
       required: true
     }
   },
   data() {
     return {
-      title: this.initConfig.title,
-      axisTitleX: this.initConfig.axisX.title,
-      axisTitleY: this.initConfig.axisY.title,
-      yScale: this.initConfig.axisY.scale,
+      title: this.options.title,
+      axisTitleX: this.options.axisX.title,
+      axisTitleY: this.options.axisY.title,
+      yScale: this.options.axisY.scale || 'Linear',
       imageFormat: 'png',
       imageScale: 2
     }

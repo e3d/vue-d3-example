@@ -2,17 +2,17 @@
   <div class="chart" :style="_containerStyle">
     <svg style="width:100%;height:100%;" ref="svgRoot">
       <g v-if="_hasTitle" :transform="_titleTransform">
-        <text class="chart-title">{{title}}</text>
+        <text class="chart-title">{{_options.title}}</text>
       </g>
       <g :transform="_chartTransform">
         <g class="chart-axis">
-          <chart-axis :title="axisY.title" orient="Left" :scale="_scaleY" />
+          <chart-axis :title="_options.axisY.title" orient="Left" :scale="_scaleY" />
           <g :transform="_axisTransform">
-            <chart-axis :title="axisX.title" orient="Bottom" :scale="_scaleX" />
+            <chart-axis :title="_options.axisX.title" orient="Bottom" :scale="_scaleX" />
           </g>
         </g>
         <g class="chart-contents" clip-path="url(#chart-content-clip)">
-          <data-line v-for="line in lines" :key="line.id" :data="line" :scaleX="_scaleX" :scaleY="_scaleY" />
+          <data-line v-for="line in lines" :key="line.id" :data="line" :scaleX="_scaleX" :scaleY="_scaleY" :defined="_defined"/>
           <ref-line v-for="line in refLines" :key="line.id" 
             :value="line.value" 
             :axis="line.axis" 
@@ -33,33 +33,27 @@
 
 <script>
 import * as d3 from 'd3';
+import _ from 'lodash';
 import DataLine from './DataLine.vue';
 import RefLine from './RefLine.vue';
 import ChartAxis from './ChartAxis.vue';
 import GlassPane from './GlassPane.vue';
 import SVGUtils from './SVGUtils';
 
+const DEFAULT_OPTIONS = {
+  axisX: {
+    scale: 'Linear'
+  },
+  axisY: {
+    scale: 'Linear'
+  }
+};
+
 export default {
   props: {
-    title: {
-      type: String,
-      required: false
-    },
-    axisX: { // { title: 'X', scale: 'Linear|Log' }
+    options: { // { title: 'My Chart', axisX: { title: 'X', scale: 'Linear' | 'Log' }, axisY: {...} }
       type: Object,
-      default() {
-        return {
-          scale: 'Linear'
-        }
-      }
-    },
-    axisY: { // { title: 'Y', scale: 'Linear|Log' }
-      type: Object,
-      default() {
-        return {
-          scale: 'Linear'
-        }
-      }
+      default: () => ({})
     },
     width: {
       type: Number,
@@ -85,6 +79,9 @@ export default {
     };
   },
   computed: {
+    _options() {
+      return _.merge({}, DEFAULT_OPTIONS, this.options);
+    },
     _containerStyle() {
       return {
         width: `${this.width}px`,
@@ -101,14 +98,15 @@ export default {
       return `translate(0, ${this.contentHeight})`;
     },
     _hasTitle() {
-      return this.title && this.title.length > 0;
+      const { title } = this._options;
+      return title && title.length > 0;
     },
     _hasAxisTitleX() {
-      const { title } = this.axisX;
+      const { title } = this._options.axisX;
       return title && title.length > 0;
     },
     _hasAxisTitleY() {
-      const { title } = this.axisY;
+      const { title } = this._options.axisY;
       return title && title.length > 0;
     },
     margin() {
@@ -150,12 +148,20 @@ export default {
       return this.height - this.margin.top - this.margin.bottom;
     },
     _scaleX() {
-      const { axisX, rangeX, domainX } = this;
+      const { axisX } = this._options;
+      const { rangeX, domainX } = this;
       return d3['scale' + axisX.scale]().range(rangeX).domain(domainX);
     },
     _scaleY() {
-      const { axisY, rangeY, domainY } = this;
+      const { axisY } = this._options;
+      const { rangeY, domainY } = this;
       return d3['scale' + axisY.scale]().range(rangeY).domain(domainY);
+    },
+    _defined() {
+      const { axisY } = this._options;
+      if (axisY.scale === 'Log') {
+        return d => d > 0.000001; // do not show too small values for Log
+      }
     }
   },
   watch: {

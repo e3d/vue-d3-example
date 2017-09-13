@@ -1,5 +1,5 @@
 <template>
-  <div class="glass-pane" :style="_styleObject" @mouseup="_handleMouseUp" @mousemove="_handleMouseMove" @mousedown="_handleMouseDown" @mousewheel="_handleMouseWheel">
+  <div class="glass-pane" :style="_styleObject" @mouseup="_handleMouseUp" @mousemove="_handleMouseMove" @mousedown="_handleMouseDown" @mousewheel.prevent="_handleMouseWheel">
     <selection-box v-if="showSelectionBox" :p1="anchor" :p2="current" />
   </div>
 </template>

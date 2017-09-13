@@ -5,18 +5,15 @@
     <div class="row">
       <div class="col-8">
         <line-chart ref="lineChart" 
-          :title="config.title" 
-          :axisX="config.axisX" 
-          :axisY="config.axisY" 
+          :options="options" 
           :lines="lines"
-          :refLines="refLines" 
-          :scaleY="config.scaleY" />
+          :refLines="refLines" />
       </div>
       <div class="col-4">
-        <control-panel :initConfig="config" 
-          @changeTitle="title => config.title = title"
-          @changeAxisTitleX="title => config.axisX.title = title"
-          @changeAxisTitleY="title => config.axisY.title = title"
+        <control-panel :options="options" 
+          @changeTitle="title => options.title = title"
+          @changeAxisTitleX="title => options.axisX.title = title"
+          @changeAxisTitleY="title => options.axisY.title = title"
           @changeScale="onChangeScale" 
           @resetZoom="onResetZoom" 
           @saveImage="onSaveImage" />
@@ -33,21 +30,20 @@ import AutoSize from './directives/AutoSize';
 export default {
   data: function() {
     return {
-      config: {
+      options: {
         title: 'Example Chart',
         axisX: {
-          title: 'Axis X',
-          scale: 'Linear'
+          title: 'Axis X'
         },
         axisY: {
           title: 'Axis Y',
-          scale: 'Linear'
+          scale: 'Linear' // need this to observe changes
         }
       },
       lines: [
         {
           id: 0,
-          values: [1, 71, 78, 25, 36, 72, 80, 100, 110, 120],
+          values: [1, 0.5, 18, 12, 34, 22, 60, 80, 110, 120],
           color: 'steelblue'
         },
         {
@@ -57,7 +53,7 @@ export default {
         },
         {
           id: 2,
-          values: [5, 41, 68, 55, 76, 32, 60, 140, 100],
+          values: [5, 41, 68, 55, 76, 32, 60, 90, 100],
           color: 'green'
         }
       ],
@@ -79,7 +75,7 @@ export default {
   },
   methods: {
     onChangeScale(newScale) {
-      this.config.axisY.scale = newScale;
+      this.options.axisY.scale = newScale;
     },
     onResetZoom() {
       this.$refs.lineChart.resetDomain();

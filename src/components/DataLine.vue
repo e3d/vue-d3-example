@@ -18,6 +18,10 @@ export default {
     'scaleX': { // D3 scale function, like d3.scaleLinear
       type: Function,
       required: true
+    },
+    'defined': { // any value less than it will be skipped, helpful if Y is Log scale
+      type: Function,
+      required: false
     }
   },
   computed: {
@@ -26,6 +30,9 @@ export default {
       const path = d3.line()
         .x((d, i) => this.scaleX(i))
         .y(d => this.scaleY(d));
+      if (this.defined) {
+        path.defined(this.defined); // filter values
+      }
       return path(this.data.values);
     }
   }
