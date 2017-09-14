@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h1>Vue D3 Line Chart Example</h1>
-    <p class="lead">Use mouse wheel to zoom and alt/shift+drag for pan. Drag to select lines.</p>
+    <p class="lead">Use mouse wheel to zoom and alt/shift+drag for pan. Drag box to select lines, optionally with Ctrl key.</p>
     <div class="row">
       <div class="col-7">
         <line-chart ref="lineChart" 

@@ -205,16 +205,21 @@ export default {
         this.prefDomainY = [y1, y2];
       }
     },
-    select(p1, p2) {
+    select(p1, p2, ctrl) {
       const { _scaleX, _scaleY } = this;
       const x1 = _scaleX.invert(p1.x);
       const y1 = _scaleY.invert(p1.y);
       const x2 = _scaleX.invert(p2.x);
       const y2 = _scaleY.invert(p2.y);
-      this.selectedLines = this.lines.filter(line => {
+      const newly = this.lines.filter(line => {
         return IntersectionUtil.polyLineIntersectsBox(
           line.values, {x: x1+1, y: y1}, {x: x2+1, y: y2});
       });
+      if (ctrl) {
+        this.selectedLines = [...new Set(newly.concat(this.selectedLines))];
+      } else {
+        this.selectedLines = newly;
+      }
     },
     downloadSVG(fileName) {
       SVGUtil.downloadSVG(this.$refs.svgRoot, fileName);
@@ -222,8 +227,8 @@ export default {
     downloadPNG(fileName, scale) {
       SVGUtil.downloadPNG(this.$refs.svgRoot, fileName, this.width, this.height, scale);
     },
-    onSelect(p1, p2) {
-      this.select(p1, p2);
+    onSelect(p1, p2, ctrl) {
+      this.select(p1, p2, ctrl);
     },
     onScroll(center, delta) {
       const factor = delta > 0 ? 1.1 : 0.9;
