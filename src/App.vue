@@ -1,15 +1,15 @@
 <template>
   <div class="container">
     <h1>Vue D3 Line Chart Example</h1>
-    <p class="lead">Use mouse wheel to zoom and drag for pan.</p>
+    <p class="lead">Use mouse wheel to zoom and alt/shift+drag for pan. Drag to select lines.</p>
     <div class="row">
-      <div class="col-8">
+      <div class="col-7">
         <line-chart ref="lineChart" 
           :options="options" 
           :lines="lines"
           :refLines="refLines" />
       </div>
-      <div class="col-4">
+      <div class="col-5">
         <control-panel :options="options" 
           @changeTitle="title => options.title = title"
           @changeAxisTitleX="title => options.axisX.title = title"
@@ -60,7 +60,7 @@ export default {
       refLines: [
         {
           id: 'Ref-Y',
-          value: 100,
+          value: 60,
           axis: "Y",
           color: "brown"
         },

@@ -12,7 +12,12 @@
           </g>
         </g>
         <g class="chart-contents" clip-path="url(#chart-content-clip)">
-          <data-line v-for="line in lines" :key="line.id" :data="line" :scaleX="_scaleX" :scaleY="_scaleY" :defined="_defined"/>
+          <data-line v-for="line in lines" :key="line.id"
+            :line="line" 
+            :scaleX="_scaleX" 
+            :scaleY="_scaleY" 
+            :defined="_defined"
+            :selectedLines="selectedLines"/>
           <ref-line v-for="line in refLines" :key="line.id" 
             :value="line.value" 
             :axis="line.axis" 
@@ -38,7 +43,8 @@ import DataLine from './DataLine.vue';
 import RefLine from './RefLine.vue';
 import ChartAxis from './ChartAxis.vue';
 import GlassPane from './GlassPane.vue';
-import SVGUtils from './SVGUtils';
+import SVGUtil from '../utils/SVGUtil';
+import IntersectionUtil from '../utils/IntersectionUtil';
 
 const DEFAULT_OPTIONS = {
   axisX: {
@@ -75,7 +81,8 @@ export default {
   data: function() {
     return {
       prefDomainX: null,
-      prefDomainY: null
+      prefDomainY: null,
+      selectedLines: []
     };
   },
   computed: {
@@ -198,20 +205,32 @@ export default {
         this.prefDomainY = [y1, y2];
       }
     },
+    select(p1, p2) {
+      const { _scaleX, _scaleY } = this;
+      const x1 = _scaleX.invert(p1.x);
+      const y1 = _scaleY.invert(p1.y);
+      const x2 = _scaleX.invert(p2.x);
+      const y2 = _scaleY.invert(p2.y);
+      this.selectedLines = this.lines.filter(line => {
+        return IntersectionUtil.polyLineIntersectsBox(
+          line.values, {x: x1+1, y: y1}, {x: x2+1, y: y2});
+      });
+    },
     downloadSVG(fileName) {
-      SVGUtils.downloadSVG(this.$refs.svgRoot, fileName);
+      SVGUtil.downloadSVG(this.$refs.svgRoot, fileName);
     },
     downloadPNG(fileName, scale) {
-      SVGUtils.downloadPNG(this.$refs.svgRoot, fileName, this.width, this.height, scale);
+      SVGUtil.downloadPNG(this.$refs.svgRoot, fileName, this.width, this.height, scale);
     },
-    onSelect(p1, p2) { // handler for selection pane
+    onSelect(p1, p2) {
+      this.select(p1, p2);
     },
     onScroll(center, delta) {
       const factor = delta > 0 ? 1.1 : 0.9;
       this.zoom(center.x, center.y, factor);
     },
-    onDrag(delta) {
-      this.pan(delta.x, delta.y);
+    onDrag(deltaX, deltaY) {
+      this.pan(deltaX, deltaY);
     }
   },
   components: {

@@ -15,20 +15,22 @@
       </div>
     </div>
     <hr>
-    <div class="form-group">
-      <legend class="col-form-legend">Y Axis Scale</legend>
-      <label class="form-check-label" style="padding-right:10px;">
-        <input class="form-check-input" type="radio" v-model="yScale" value="Linear"> Linear
-      </label>
-      <label class="form-check-label">
-        <input class="form-check-input" type="radio" v-model="yScale" value="Log"> Logarithm
-      </label>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <legend class="col-form-legend">Y Axis Scale</legend>
+        <label class="form-check-label" style="padding-right:10px;">
+          <input class="form-check-input" type="radio" v-model="yScale" value="Linear"> Linear
+        </label>
+        <label class="form-check-label">
+          <input class="form-check-input" type="radio" v-model="yScale" value="Log"> Logarithm
+        </label>
+      </div>
+      <div class="form-group col-md-6">
+        <button class="btn btn-default" @click.prevent="$emit('resetZoom')">
+          Reset Zoom
+        </button>
+      </div>
     </div>
-    </div>
-    <hr>
-    <button class="btn btn-default" @click.prevent="$emit('resetZoom')">
-      Reset Zoom
-    </button>
     <hr>
     <div class="form-inline">
       <select class="form-control mb-2 mr-sm-2 mb-sm-0" v-model="imageFormat">
@@ -51,7 +53,7 @@
 <script>
 export default {
   props: {
-    'options': {
+    options: {
       type: Object,
       required: true
     }

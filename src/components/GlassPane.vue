@@ -1,6 +1,11 @@
 <template>
-  <div class="glass-pane" :style="_styleObject" @mouseup="_handleMouseUp" @mousemove="_handleMouseMove" @mousedown="_handleMouseDown" @mousewheel.prevent="_handleMouseWheel">
-    <selection-box v-if="showSelectionBox" :p1="anchor" :p2="current" />
+  <div class="glass-pane" :style="_styleObject" 
+    @mouseup="_handleMouseUp" 
+    @mousemove="_handleMouseMove" 
+    @mousedown="_handleMouseDown" 
+    @mouseleave="_handleMouseLeave" 
+    @mousewheel.prevent="_handleMouseWheel">
+    <selection-box v-if="selectMode" :p1="anchor" :p2="current" />
   </div>
 </template>
 
@@ -13,10 +18,6 @@ export default {
     margin: {
       type: Object,
       required: true
-    },
-    showSelectionBox: {
-      type: Boolean,
-      default: false
     }
   },
   components: {
@@ -25,7 +26,8 @@ export default {
   data: function() {
     return {
       anchor: null,
-      current: null
+      current: null,
+      selectMode: true
     }
   },
   computed: {
@@ -63,6 +65,10 @@ export default {
         return;
       }
       event.stopPropagation();
+
+      // select mode unless altert key pressed
+      this.selectMode = !event.altKey && !event.shiftKey; 
+
       const { left, top } = this.$el.getBoundingClientRect();
       this.anchor = {
         x: event.clientX - left,
@@ -74,27 +80,39 @@ export default {
         return;
       }
       event.stopPropagation();
+
       const { anchor, current } = this;
       const end = current ? current : anchor;
       const [x1, x2] = anchor.x < end.x ? [anchor.x, end.x] : [end.x, anchor.x];
       const [y1, y2] = anchor.y < end.y ? [anchor.y, end.y] : [end.y, anchor.y];
-      const { ctrlKey } = event;
-      this.$emit('select', new Point(x1, y1), new Point(x2, y2), ctrlKey);
       this.anchor = null;
       this.current = null;
+
+      if (this.selectMode) {
+        this.$emit('select', new Point(x1, y1), new Point(x2, y2), event.ctrlKey);
+      } else {
+        this.selectMode = true; // restore to select mode
+      }
+    },
+    _handleMouseLeave(event) {
+      this._handleMouseUp(event);
     },
     _handleMouseMove(event) {
-      event.stopPropagation();
       if (!this.anchor) {
         return;
       }
+      event.stopPropagation();
+
       const { left, top } = this.$el.getBoundingClientRect();
       const prevCurrent = this.current || this.anchor;
       this.current = {
         x: event.clientX - left,
         y: event.clientY - top
       };
-      this.$emit('drag', new Point(this.current.x - prevCurrent.x, this.current.y - prevCurrent.y));
+
+      if (!this.selectMode) {
+        this.$emit('drag', this.current.x - prevCurrent.x, this.current.y - prevCurrent.y);
+      }
     },
     _handleMouseWheel(event) {
       event.stopPropagation();
