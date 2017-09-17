@@ -1,13 +1,27 @@
 var path = require('path')
 var webpack = require('webpack')
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const VENDOR_LIBS = ['vue', 'd3', 'lodash']; 
 
 module.exports = {
-  entry: './src/main.js',
+  entry: {
+    bundle: './src/main.js',
+    vendor: VENDOR_LIBS
+  },
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
-    filename: 'build.js'
+    // publicPath: '/dist/',
+    filename: '[name].[hash].js'
   },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      names: ['vendor', 'manifest']
+    }),
+    new HtmlWebpackPlugin({
+      template: 'src/index.html'
+    })
+  ],
   module: {
     rules: [
       {
