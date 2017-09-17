@@ -1,10 +1,14 @@
 <template>
   <div class="container">
     <h1>Vue D3 Line Chart Example</h1>
-    <p class="lead">Use mouse wheel to zoom and alt/shift+drag for pan. Drag box to select lines, optionally with Ctrl key.</p>
+    <p class="lead">Use mouse wheel to zoom and alt/shift+drag for pan. 
+      Drag box to select lines, optionally with Ctrl key. 
+      Resize window to see chart responding.</p>
     <div class="row">
-      <div class="col-7">
+      <div v-resize-detector="onResize" class="col-7">
         <line-chart ref="lineChart" 
+          :width="width"
+          :height="height"
           :options="options" 
           :lines="lines"
           :refLines="refLines" />
@@ -25,11 +29,13 @@
 <script>
 import ControlPanel from './components/ControlPanel.vue';
 import LineChart from './components/LineChart.vue';
-import AutoSize from './directives/AutoSize';
+import ResizeDetector from './directives/ResizeDetector';
 
 export default {
   data: function() {
     return {
+      width: 600,
+      height: 400,
       options: {
         title: 'Example Chart',
         axisX: {
@@ -87,6 +93,12 @@ export default {
       } else {
         this.$refs.lineChart.downloadPNG(fileName + '.png', imageScale);
       }
+    },
+    onResize(element) {
+      var width = element.offsetWidth;
+      var height = element.offsetHeight;
+      this.width = width - 30;
+      this.height = height;
     }
   },
   components: {
@@ -94,7 +106,7 @@ export default {
     'line-chart': LineChart
   },
   directives: {
-    'autosize': AutoSize
+    'resize-detector': ResizeDetector
   }
 }
 </script>

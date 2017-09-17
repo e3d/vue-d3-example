@@ -5,11 +5,11 @@ An example for using Vue and D3 to create a reactive line chart. The line chart 
 - Display multiple line series in different color
 - Display chart title and axis title
 - Display multiple reference lines in different color
-- Zoom and pan
+- Zoom and pan with mouse
 - Select lines using a rubberband box with multi-select support
 - Swith between linear and log scale (Y axis)
-- Responsive to the resizing of its parent element (TODO)
-- Save to SVG or PNG file with confiurable scale rate
+- Responsive to the resizing of its parent element
+- Save to SVG or PNG file with configurable scale rate
 
 ## Build Setup
 

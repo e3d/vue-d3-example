@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "d3": "^4.10.2",
+    "element-resize-detector": "^1.1.12",
     "lodash": "^4.17.4",
-    "resize-observer-polyfill": "^1.4.2",
     "save-svg-as-png": "^1.2.0",
     "vue": "^2.3.3"
   },
