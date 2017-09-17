@@ -83,9 +83,9 @@ export default {
     onSaveImage(imageFormat, imageScale) {
       const fileName = 'Line Chart';
       if (imageFormat === 'svg') {
-        this.$refs.lineChart.downloadSVG(fileName);
+        this.$refs.lineChart.downloadSVG(fileName + '.svg');
       } else {
-        this.$refs.lineChart.downloadPNG(fileName, imageScale);
+        this.$refs.lineChart.downloadPNG(fileName + '.png', imageScale);
       }
     }
   },

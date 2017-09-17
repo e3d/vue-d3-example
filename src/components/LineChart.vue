@@ -39,11 +39,11 @@
 <script>
 import * as d3 from 'd3';
 import _ from 'lodash';
+import SaveSvgAsPng from 'save-svg-as-png';
 import DataLine from './DataLine.vue';
 import RefLine from './RefLine.vue';
 import ChartAxis from './ChartAxis.vue';
 import GlassPane from './GlassPane.vue';
-import SVGUtil from '../utils/SVGUtil';
 import IntersectionUtil from '../utils/IntersectionUtil';
 
 const DEFAULT_OPTIONS = {
@@ -222,10 +222,10 @@ export default {
       }
     },
     downloadSVG(fileName) {
-      SVGUtil.downloadSVG(this.$refs.svgRoot, fileName);
+      SaveSvgAsPng.saveSvg(this.$refs.svgRoot, fileName);
     },
     downloadPNG(fileName, scale) {
-      SVGUtil.downloadPNG(this.$refs.svgRoot, fileName, this.width, this.height, scale);
+     SaveSvgAsPng.saveSvgAsPng(this.$refs.svgRoot, fileName, {scale: scale});
     },
     onSelect(p1, p2, ctrl) {
       this.select(p1, p2, ctrl);

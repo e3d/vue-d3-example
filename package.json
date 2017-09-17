@@ -12,6 +12,7 @@
     "d3": "^4.10.2",
     "lodash": "^4.17.4",
     "resize-observer-polyfill": "^1.4.2",
+    "save-svg-as-png": "^1.2.0",
     "vue": "^2.3.3"
   },
   "devDependencies": {
