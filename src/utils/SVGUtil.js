@@ -70,9 +70,9 @@ function getSVGString(svgNode) {
   }
 }
 
-const downloadBlob = (function () {
-  var a = document.createElement("a");
-  a.style = "display: none";
+const downloadBlob = (function() {
+  const a = document.createElement("a");
+  a.style.display = "none";
   document.body.appendChild(a);
   return function (data, fileName) {
     var blob = new Blob([data], { type: "image/svg+xml" }),
