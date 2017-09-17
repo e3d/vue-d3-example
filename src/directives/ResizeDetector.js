@@ -5,8 +5,7 @@ const erd = elementResizeDetectorMaker({
 });
 
 export default {
-  inserted(el, binding, vnode) {
-    console.log(binding);
+  bind(el, binding, vnode) {
     erd.listenTo(el, function(element) {
       // var width = element.offsetWidth;
       // var height = element.offsetHeight;
