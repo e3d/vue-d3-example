@@ -43,12 +43,6 @@ export default {
       const { selectedLines, line } = this;
       return selectedLines && selectedLines.includes(line) ? 2 : 1;
     }
-  },
-  watch: {
-    'line.highlighted'() {
-      console.log('line updated %%%%');
-      console.log(line.highlighted);
-    }
   }
 }
 </script>

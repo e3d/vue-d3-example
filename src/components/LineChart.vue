@@ -1,6 +1,6 @@
 <template>
-  <div class="chart" :style="_containerStyle">
-    <svg style="width:100%;height:100%;" ref="svgRoot">
+  <div class="chart">
+    <svg :width="width" :height="height" ref="svgRoot">
       <g v-if="_hasTitle" :transform="_titleTransform">
         <text class="chart-title">{{_options.title}}</text>
       </g>
@@ -88,12 +88,6 @@ export default {
   computed: {
     _options() {
       return _.merge({}, DEFAULT_OPTIONS, this.options);
-    },
-    _containerStyle() {
-      return {
-        width: `${this.width}px`,
-        height: `${this.height}px`
-      }
     },
     _chartTransform() {
       return `translate(${this.margin.left}, ${this.margin.top})`;
