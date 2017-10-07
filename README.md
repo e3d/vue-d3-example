@@ -5,7 +5,7 @@ An example for using Vue and D3 to create a reactive line chart. The line chart 
 - Display multiple line series in different color
 - Display chart title and axis title
 - Display multiple reference lines in different color
-- Zoom and pan with mouse
+- Interactive zoom and pan with mouse
 - Select lines using a rubberband box with multi-select support
 - Swith between linear and log scale (Y axis)
 - Responsive to the resizing of its parent element
@@ -42,12 +42,9 @@ The following components supports the interaction with the chart, such as zoom, 
 
 - *GlassPane*: a transparent div overlaid on top of an element (*LineChart* in this example) and captures the mouse events
 - *SelectionBox*: a semi-transparent div overlaid on *GlassPane* to indicate the selection area
-- *AutoSize*: a directive to automatically update `width` and `height` of the host element when the parent element is resized
+- *ResizeDetector*: a directive to detect size change of element and call a method
 
 ### Control Panel Component
 
 The control panel component is to demonstrate the line chart features and is not part of the line chart.  
 
-### Third-party Sources
-
-- *svgToImage*: a function to save SVG with styling to PNG image stream, based on the codes from Nikita [Rokotyan's block](http://bl.ocks.org/Rokotyan/0556f8facbaf344507cdc45dc3622177).

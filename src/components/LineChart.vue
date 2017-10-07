@@ -39,7 +39,7 @@
 <script>
 import * as d3 from 'd3';
 import _ from 'lodash';
-import SaveSvgAsPng from 'save-svg-as-png';
+import SVGUtil from '../mixins/SVGUtil';
 import DataLine from './DataLine.vue';
 import RefLine from './RefLine.vue';
 import ChartAxis from './ChartAxis.vue';
@@ -56,6 +56,7 @@ const DEFAULT_OPTIONS = {
 };
 
 export default {
+  mixins: [ SVGUtil ],
   props: {
     options: { // { title: 'My Chart', axisX: { title: 'X', scale: 'Linear' | 'Log' }, axisY: {...} }
       type: Object,
@@ -220,12 +221,6 @@ export default {
       } else {
         this.selectedLines = newly;
       }
-    },
-    downloadSVG(fileName) {
-      SaveSvgAsPng.saveSvg(this.$refs.svgRoot, fileName);
-    },
-    downloadPNG(fileName, scale) {
-     SaveSvgAsPng.saveSvgAsPng(this.$refs.svgRoot, fileName, {scale: scale});
     },
     onSelect(p1, p2, ctrl) {
       this.select(p1, p2, ctrl);
