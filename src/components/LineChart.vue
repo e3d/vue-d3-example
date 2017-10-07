@@ -32,7 +32,8 @@
         </clipPath>
       </defs>
     </svg>
-    <glass-pane @select="onSelect" @scroll="onScroll" @drag="onDrag" :margin="margin" />
+    <glass-pane @select="onSelect" @scroll="onScroll" 
+      @drag="onDrag" @move="onMove" :style="_glassPaneStyle" />
   </div>
 </template>
 
@@ -95,6 +96,15 @@ export default {
         width: `${this.width}px`,
         height: `${this.height}px`
       }
+    },
+    _glassPaneStyle() {
+      const { margin } = this;
+      return {
+        top: `${margin.top}px`,
+        left: `${margin.left}px`,
+        right: `${margin.right}px`,
+        bottom: `${margin.bottom}px`
+      };
     },
     _chartTransform() {
       return `translate(${this.margin.left}, ${this.margin.top})`;
@@ -231,6 +241,9 @@ export default {
     },
     onDrag(deltaX, deltaY) {
       this.pan(deltaX, deltaY);
+    },
+    onMove(x, y) {
+      //console.log(`[${x}, ${y}]`);
     }
   },
   components: {

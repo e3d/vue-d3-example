@@ -1,5 +1,5 @@
 <template>
-  <div class="glass-pane" :style="_styleObject" 
+  <div class="glass-pane" 
     @mouseup="_handleMouseUp" 
     @mousemove="_handleMouseMove" 
     @mousedown="_handleMouseDown" 
@@ -14,12 +14,6 @@ import SelectionBox from './SelectionBox.vue';
 import Point from './Point';
 
 export default {
-  props: {
-    margin: {
-      type: Object,
-      required: true
-    }
-  },
   components: {
     'selection-box': SelectionBox
   },
@@ -28,35 +22,6 @@ export default {
       anchor: null,
       current: null,
       selectMode: true
-    }
-  },
-  computed: {
-    _margin() { // computed margin (an object)
-      const { margin } = this;
-      if (Number.isInteger(margin)) {
-        return {
-          top: margin,
-          left: margin,
-          right: margin,
-          bottom: margin
-        };
-      } else {
-        return { // a copy
-          top: margin.top,
-          left: margin.left,
-          right: margin.right,
-          bottom: margin.bottom
-        };
-      }
-    },
-    _styleObject() {
-      const { _margin } = this;
-      return {
-        top: `${_margin.top}px`,
-        left: `${_margin.left}px`,
-        right: `${_margin.right}px`,
-        bottom: `${_margin.bottom}px`
-      };
     }
   },
   methods: {
@@ -98,12 +63,14 @@ export default {
       this._handleMouseUp(event);
     },
     _handleMouseMove(event) {
+      const { left, top } = this.$el.getBoundingClientRect();
+      this.$emit('move', event.clientX - left, event.clientY - top);
+      
       if (!this.anchor) {
         return;
       }
       event.stopPropagation();
 
-      const { left, top } = this.$el.getBoundingClientRect();
       const prevCurrent = this.current || this.anchor;
       this.current = {
         x: event.clientX - left,
