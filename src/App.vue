@@ -67,14 +67,16 @@ export default {
         {
           id: 'Ref-Y',
           value: 60,
-          axis: "Y",
-          color: "brown"
+          axis: 'Y',
+          color: 'brown',
+          draggable: true
         },
         {
           id: 'Ref-X',
           value: 5,
-          axis: "X",
-          color: "green"
+          axis: 'X',
+          color: 'green',
+          draggable: false
         }
       ]
     }

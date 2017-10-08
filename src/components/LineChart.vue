@@ -19,9 +19,7 @@
             :defined="_defined"
             :highlighted="selectedLines.includes(line) || hoverLine == line"/>
           <ref-line v-for="line in refLines" :key="line.id" 
-            :value="line.value" 
-            :axis="line.axis" 
-            :color="line.color"
+            :line="line" 
             :scale="line.axis === 'X' ? _scaleX : _scaleY"
             :length="line.axis === 'X' ? contentHeight : contentWidth" />
         </g>
@@ -244,6 +242,25 @@ export default {
         this.selectedLines = newly;
       }
     },
+    highlight(x, y) {
+      const { _scaleX, _scaleY } = this;
+      const x1 = _scaleX.invert(x-2);
+      const y1 = _scaleY.invert(y-2);
+      const x2 = _scaleX.invert(x+2);
+      const y2 = _scaleY.invert(y+2);
+
+      const hoverLine = this.lines.find(line => {
+        return IntersectionUtil.polyLineIntersectsBox(
+          line.values, {x: x1+1, y: y1}, {x: x2+1, y: y2});
+      });
+      if (hoverLine) {
+        this.hoverX = x;
+        this.hoverY = y;
+        this.hoverLine = hoverLine;
+      } else {
+        this.hoverLine = null;
+      }
+    },
     onSelect(p1, p2, ctrl) {
       this.select(p1, p2, ctrl);
     },
@@ -255,19 +272,7 @@ export default {
       this.pan(deltaX, deltaY);
     },
     onMove(x, y) {
-      const { _scaleX, _scaleY } = this;
-      const x1 = _scaleX.invert(x-2);
-      const y1 = _scaleY.invert(y-2);
-      const x2 = _scaleX.invert(x+2);
-      const y2 = _scaleY.invert(y+2);
-
-      const newly = this.lines.find(line => {
-        return IntersectionUtil.polyLineIntersectsBox(
-          line.values, {x: x1+1, y: y1}, {x: x2+1, y: y2});
-      });
-      this.hoverX = x;
-      this.hoverY = y;
-      this.hoverLine = newly ? newly : null;
+      this.highlight(x, y);
     }
   },
   components: {
