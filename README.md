@@ -1,14 +1,14 @@
 # vue-d3-example
 
-An example for using Vue and D3 to create a reactive line chart. The line chart in the example supports the following features
+An example for using Vue and D3 to create a non-trivial reactive line chart. The line chart in the example supports the following features
 
 - Display multiple line series in different color
 - Display chart title and axis title
 - Display multiple reference lines in different color
-- Hover line to highlight and see tooltip
+- Hover line to highlight it and see the tooltip
 - Interactive zoom and pan with mouse
 - Select lines using a rubberband box with multi-select support
-- Swith between linear and log scale (Y axis)
+- Switch between linear and log scale for Y axis
 - Responsive to the resizing of its parent element
 - Save to SVG or PNG file with configurable scale rate
 
@@ -39,11 +39,11 @@ The line chart consists of three key components:
 - *ChartAxis*: used by *LineChart* component internally to display X and Y axis
 - *DataLine*: used by *LineChart* component internally to display a single data serie
 
-The following components supports the interaction with the chart, such as zoom, pan and data selection:
+The following components supports the interaction with the chart or save it as image:
 
 - *GlassPane*: a transparent div overlaid on top of an element (*LineChart* in this example) and captures the mouse events
 - *SelectionBox*: a semi-transparent div overlaid on *GlassPane* to indicate the selection area
-- *ResizeDetector*: a directive to detect size change of element and call a method
+- *ResizeDetector*: a directive to detect size change of element and call a method (to resize chart in this example)
 - *SVGUtil*: a mixin to export SVG root to PNG or SVG file
 
 ### Control Panel Component
