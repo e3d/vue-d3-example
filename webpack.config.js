@@ -2,7 +2,8 @@ var path = require('path')
 var webpack = require('webpack')
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const VENDOR_LIBS = ['vue', 'd3', 'lodash']; 
+const VENDOR_LIBS = ['vue', 'd3', 'lodash', 
+  'element-resize-detector', 'save-svg-as-png']; 
 
 module.exports = {
   entry: {
@@ -44,6 +45,10 @@ module.exports = {
         options: {
           name: '[name].[ext]?[hash]'
         }
+      },
+      {
+        test: /\.css$/,
+        use: [ 'style-loader', 'css-loader' ]
       }
     ]
   },
