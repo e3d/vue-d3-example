@@ -23,8 +23,8 @@ export default {
       type: Function,
       required: false
     },
-    selectedLines: { // the array of lines to determine if this line is in there
-      type: Array,
+    highlighted: { // if the line should be shown as highlighted
+      type: Boolean,
       default: false
     }
   },
@@ -40,8 +40,7 @@ export default {
       return path(this.line.values);
     },
     _lineWidth() {
-      const { selectedLines, line } = this;
-      return selectedLines && selectedLines.includes(line) ? 2 : 1;
+      return this.highlighted ? 2 : 1;
     }
   }
 }

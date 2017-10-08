@@ -5,6 +5,7 @@ An example for using Vue and D3 to create a reactive line chart. The line chart 
 - Display multiple line series in different color
 - Display chart title and axis title
 - Display multiple reference lines in different color
+- Hover line to highlight and see tooltip
 - Interactive zoom and pan with mouse
 - Select lines using a rubberband box with multi-select support
 - Swith between linear and log scale (Y axis)

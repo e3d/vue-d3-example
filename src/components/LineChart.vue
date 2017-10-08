@@ -17,7 +17,7 @@
             :scaleX="_scaleX" 
             :scaleY="_scaleY" 
             :defined="_defined"
-            :selectedLines="selectedLines"/>
+            :highlighted="selectedLines.includes(line) || hoverLine == line"/>
           <ref-line v-for="line in refLines" :key="line.id" 
             :value="line.value" 
             :axis="line.axis" 
@@ -33,7 +33,14 @@
       </defs>
     </svg>
     <glass-pane @select="onSelect" @scroll="onScroll" 
-      @drag="onDrag" @move="onMove" :style="_glassPaneStyle" />
+      @drag="onDrag" @move="onMove" :style="_glassPaneStyle">
+      <tooltip v-if="hoverLine" :x="hoverX" :y="hoverY">
+        <div style="min-width: 100px;">
+          <div><strong>ID</strong>: {{hoverLine.id}}</div>
+          <div><strong>Color</strong>: {{hoverLine.color}}</div>
+        </div>
+      </tooltip>
+    </glass-pane>
   </div>
 </template>
 
@@ -45,6 +52,7 @@ import DataLine from './DataLine.vue';
 import RefLine from './RefLine.vue';
 import ChartAxis from './ChartAxis.vue';
 import GlassPane from './GlassPane.vue';
+import Tooltip from './Tooltip.vue';
 import IntersectionUtil from '../utils/IntersectionUtil';
 
 const DEFAULT_OPTIONS = {
@@ -84,7 +92,10 @@ export default {
     return {
       prefDomainX: null,
       prefDomainY: null,
-      selectedLines: []
+      selectedLines: [],
+      hoverLine: null,
+      hoverX: 0,
+      hoverY: 0
     };
   },
   computed: {
@@ -222,6 +233,7 @@ export default {
       const y1 = _scaleY.invert(p1.y);
       const x2 = _scaleX.invert(p2.x);
       const y2 = _scaleY.invert(p2.y);
+
       const newly = this.lines.filter(line => {
         return IntersectionUtil.polyLineIntersectsBox(
           line.values, {x: x1+1, y: y1}, {x: x2+1, y: y2});
@@ -243,14 +255,27 @@ export default {
       this.pan(deltaX, deltaY);
     },
     onMove(x, y) {
-      //console.log(`[${x}, ${y}]`);
+      const { _scaleX, _scaleY } = this;
+      const x1 = _scaleX.invert(x-2);
+      const y1 = _scaleY.invert(y-2);
+      const x2 = _scaleX.invert(x+2);
+      const y2 = _scaleY.invert(y+2);
+
+      const newly = this.lines.find(line => {
+        return IntersectionUtil.polyLineIntersectsBox(
+          line.values, {x: x1+1, y: y1}, {x: x2+1, y: y2});
+      });
+      this.hoverX = x;
+      this.hoverY = y;
+      this.hoverLine = newly ? newly : null;
     }
   },
   components: {
     'chart-axis': ChartAxis,
     'data-line': DataLine,
     'ref-line': RefLine,
-    'glass-pane': GlassPane
+    'glass-pane': GlassPane,
+    'tooltip': Tooltip
   },
   mounted() {
     this.resetDomain();
@@ -265,7 +290,7 @@ export default {
   user-select: none;
   padding: 0;
   margin: 0;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .chart-title {

@@ -6,6 +6,7 @@
     @mouseleave="_handleMouseLeave" 
     @mousewheel.prevent="_handleMouseWheel">
     <selection-box v-if="selectMode" :p1="anchor" :p2="current" />
+    <slot></slot>
   </div>
 </template>
 
