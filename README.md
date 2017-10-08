@@ -44,6 +44,7 @@ The following components supports the interaction with the chart, such as zoom, 
 - *GlassPane*: a transparent div overlaid on top of an element (*LineChart* in this example) and captures the mouse events
 - *SelectionBox*: a semi-transparent div overlaid on *GlassPane* to indicate the selection area
 - *ResizeDetector*: a directive to detect size change of element and call a method
+- *SVGUtil*: a mixin to export SVG root to PNG or SVG file
 
 ### Control Panel Component
 
