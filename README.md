@@ -1,6 +1,8 @@
 # vue-d3-example
 
-An example for using Vue and D3 to create a non-trivial reactive line chart. The line chart in the example supports the following features
+> An example for using Vue and D3 to create a non-trivial reactive line chart. 
+
+The line chart in the example supports the following features
 
 - Display multiple line series in different color
 - Display chart title and axis title
@@ -11,6 +13,8 @@ An example for using Vue and D3 to create a non-trivial reactive line chart. The
 - Switch between linear and log scale for Y axis
 - Responsive to the resizing of its parent element
 - Save to SVG or PNG file with configurable scale rate
+
+[Online Demo](https://wuruoyun.github.io/vue-d3-example/)
 
 ## Build Setup
 
